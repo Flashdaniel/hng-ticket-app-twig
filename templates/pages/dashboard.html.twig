@@ -4,10 +4,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="/assets/css/tickets.css">
-{% endblock %}
-
-{% block head %}
-    <link rel="stylesheet" href="/assets/css/tickets.css">
     <script>
         // Check authentication on page load
         function checkAuth() {
@@ -16,7 +12,8 @@
                 window.location.href = '/auth/login';
             }
         }
-        window.onload = checkAuth;
+        // Run authentication check after DOM is loaded
+        document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
 {% endblock %}
 
