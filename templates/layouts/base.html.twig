@@ -14,20 +14,40 @@
     <header class="header">
         <nav class="nav">
             <a href="/" class="logo">TicketApp</a>
-            <div class="nav-links">
-                {% if is_authenticated %}
-                    <a href="/dashboard">Dashboard</a>
-                    <a href="/tickets">Tickets</a>
-                    <form action="/auth/logout" method="post" style="display: inline;">
-                        <button type="submit" class="cta-button secondary">Logout</button>
-                    </form>
-                {% else %}
-                    <a href="/auth/login">Login</a>
-                    <a href="/auth/signup">Sign Up</a>
-                {% endif %}
+            <div class="nav-links" id="navLinks">
+                <!-- Navigation links will be updated by JavaScript -->
             </div>
         </nav>
     </header>
+
+    <script>
+        function updateNavigation() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            const navLinks = document.getElementById('navLinks');
+            
+            if (isAuthenticated) {
+                navLinks.innerHTML = `
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/tickets">Tickets</a>
+                    <button onclick="handleLogout()" class="cta-button secondary">Logout</button>
+                `;
+            } else {
+                navLinks.innerHTML = `
+                    <a href="/auth/login">Login</a>
+                    <a href="/auth/signup">Sign Up</a>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user');
+            window.location.href = '/auth/login';
+        }
+
+        // Update navigation when page loads
+        updateNavigation();
+    </script>
 
     <main>
         {% block content %}{% endblock %}

@@ -6,6 +6,20 @@
     <link rel="stylesheet" href="/assets/css/tickets.css">
 {% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/tickets.css">
+    <script>
+        // Check authentication on page load
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            if (!isAuthenticated) {
+                window.location.href = '/auth/login';
+            }
+        }
+        window.onload = checkAuth;
+    </script>
+{% endblock %}
+
 {% block content %}
 <div class="container" style="max-width: 1440px; margin: 0 auto; padding: var(--spacing-lg);">
     <h1 class="page-title">Dashboard</h1>
