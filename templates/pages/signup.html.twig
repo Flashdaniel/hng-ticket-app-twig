@@ -71,14 +71,19 @@
 {% block scripts %}
 <script>
 document.getElementById('signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-
     if (password !== confirmPassword) {
-        e.preventDefault();
-        showError(this, 'Passwords do not match');
+        alert('Passwords do not match');
         return false;
     }
+    // Simulate signup
+    localStorage.setItem('user', JSON.stringify({ name, email, password }));
+    localStorage.setItem('isAuthenticated', 'true');
+    window.location.href = '/dashboard';
 });
 </script>
 {% endblock %}
