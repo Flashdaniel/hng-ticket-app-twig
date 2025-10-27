@@ -4,7 +4,7 @@
   "description": "Ticket Management App - Twig Implementation",
   "main": "index.php",
   "scripts": {
-    "start": "php -S localhost:3002"
+    "start": "php -S localhost:3002 -t public"
   },
   "dependencies": {
     "twig": "^3.7.0"
