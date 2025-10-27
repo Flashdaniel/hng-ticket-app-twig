@@ -1,0 +1,43 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Login - Ticket Management App{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="form-title">Login</h2>
+        <form id="login-form" class="form">
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    autocomplete="email"
+                    placeholder="Enter your email"
+                >
+            </div>
+            
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    autocomplete="current-password"
+                    placeholder="Enter your password"
+                >
+            </div>
+
+            <button type="submit" class="submit-button">Log In</button>
+
+            <p class="text-center mt-4">
+                Don't have an account? 
+                <a href="/auth/signup">Sign up here</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

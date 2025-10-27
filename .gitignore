@@ -1,0 +1,63 @@
+# -----------------------------
+# PHP / Composer / Twig Project
+# -----------------------------
+
+# Composer dependencies
+/vendor/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Twig cache (if enabled)
+var/cache/
+cache/
+tmp/
+temp/
+*.tmp
+
+# Logs
+var/log/
+logs/
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Node (if using build tools like webpack/mix)
+node_modules/
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Build output
+dist/
+build/
+public/build/
+public/assets/
+
+# PHPStorm / JetBrains
+*.iml
+out/
+
+# PHPUnit
+.phpunit.result.cache
+coverage/
+
+# -----------------------------
+# Optional: if you store templates separately
+# -----------------------------
+# Compiled templates (if any)
+templates_c/

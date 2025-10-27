@@ -1,0 +1,73 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Dashboard - Ticket Management App{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/tickets.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1440px; margin: 0 auto; padding: var(--spacing-lg);">
+    <h1 class="page-title">Dashboard</h1>
+
+    <div class="stats-grid">
+        <div class="stats-card">
+            <h3 class="stats-label">Total Tickets</h3>
+            <p class="stats-value">{{ totalTickets | default(0) }}</p>
+        </div>
+
+        <div class="stats-card">
+            <h3 class="stats-label">Open Tickets</h3>
+            <p class="stats-value" style="color: var(--status-open);">{{ openTickets | default(0) }}</p>
+        </div>
+
+        <div class="stats-card">
+            <h3 class="stats-label">In Progress</h3>
+            <p class="stats-value" style="color: var(--status-in-progress);">{{ inProgressTickets | default(0) }}</p>
+        </div>
+
+        <div class="stats-card">
+            <h3 class="stats-label">Closed Tickets</h3>
+            <p class="stats-value" style="color: var(--status-closed);">{{ closedTickets | default(0) }}</p>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: var(--spacing-md); margin: var(--spacing-xl) 0;">
+        <a href="/tickets" class="cta-button primary">Manage Tickets</a>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title">Recent Tickets</h2>
+        <div style="margin-top: var(--spacing-md); background: white; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm);">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--color-border);">
+                        <th style="text-align: left; padding: var(--spacing-md);">ID</th>
+                        <th style="text-align: left; padding: var(--spacing-md);">Title</th>
+                        <th style="text-align: left; padding: var(--spacing-md);">Status</th>
+                        <th style="text-align: left; padding: var(--spacing-md);">Created</th>
+                        <th style="text-align: left; padding: var(--spacing-md);">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in recentTickets %}
+                    <tr style="border-bottom: 1px solid var(--color-border);">
+                        <td style="padding: var(--spacing-md);">#{{ ticket.id }}</td>
+                        <td style="padding: var(--spacing-md);">{{ ticket.title }}</td>
+                        <td style="padding: var(--spacing-md);">
+                            <span class="status-badge" data-status="{{ ticket.status }}" style="padding: 4px 8px; border-radius: var(--border-radius-sm); color: white; font-size: var(--font-size-sm);">
+                                {{ ticket.status }}
+                            </span>
+                        </td>
+                        <td style="padding: var(--spacing-md);">{{ ticket.createdAt|date("Y-m-d") }}</td>
+                        <td style="padding: var(--spacing-md);">
+                            <a href="/tickets/{{ ticket.id }}" style="color: var(--color-primary); text-decoration: none; font-weight: 500;">View Details</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

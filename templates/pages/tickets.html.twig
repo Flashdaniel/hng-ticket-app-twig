@@ -1,0 +1,212 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Ticket Management - Ticket Management App{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="/assets/css/tickets.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-8">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+        <h1>Tickets</h1>
+        <button onclick="openCreateTicketModal()" class="cta-button primary">Create Ticket</button>
+    </div>
+
+    <!-- Filters -->
+    <div style="background: white; padding: var(--spacing-md); border-radius: var(--border-radius-md); margin-bottom: var(--spacing-lg); box-shadow: var(--shadow-sm);">
+        <form id="filter-form" class="form" style="display: flex; gap: var(--spacing-md); align-items: flex-end;">
+            <div class="form-field" style="flex: 1;">
+                <label for="search">Search</label>
+                <input type="text" id="search" name="search" placeholder="Search tickets...">
+            </div>
+            <div class="form-field" style="width: 200px;">
+                <label for="status">Status</label>
+                <select id="status" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button" style="margin-top: 0;">Apply Filters</button>
+        </form>
+    </div>
+
+    <!-- Tickets Table -->
+    <div style="background: white; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-sm);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--color-border);">
+                    <th style="text-align: left; padding: var(--spacing-md);">ID</th>
+                    <th style="text-align: left; padding: var(--spacing-md);">Title</th>
+                    <th style="text-align: left; padding: var(--spacing-md);">Description</th>
+                    <th style="text-align: left; padding: var(--spacing-md);">Status</th>
+                    <th style="text-align: left; padding: var(--spacing-md);">Created</th>
+                    <th style="text-align: left; padding: var(--spacing-md);">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr style="border-bottom: 1px solid var(--color-border);">
+                    <td style="padding: var(--spacing-md);">#{{ ticket.id }}</td>
+                    <td style="padding: var(--spacing-md);">{{ ticket.title }}</td>
+                    <td style="padding: var(--spacing-md);">
+                        {{ ticket.description|length > 100 ? ticket.description|slice(0, 100) ~ '...' : ticket.description }}
+                    </td>
+                    <td style="padding: var(--spacing-md);">
+                        <span class="status-badge" data-status="{{ ticket.status }}" 
+                              style="padding: 4px 8px; border-radius: var(--border-radius-sm); color: white; font-size: var(--font-size-sm);">
+                            {{ ticket.status }}
+                        </span>
+                    </td>
+                    <td style="padding: var(--spacing-md);">{{ ticket.createdAt|date("Y-m-d") }}</td>
+                    <td style="padding: var(--spacing-md);">
+                        <div style="display: flex; gap: var(--spacing-xs);">
+                            <button onclick="openEditTicketModal('{{ ticket|json_encode }}')"
+                                    style="color: var(--color-primary); background: none; border: none; cursor: pointer; font-weight: 500;">
+                                Edit
+                            </button>
+                            <button onclick="deleteTicket('{{ ticket.id }}')"
+                                    style="color: var(--color-error); background: none; border: none; cursor: pointer; font-weight: 500;">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create Ticket Modal -->
+<div id="create-ticket-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div class="form-card" style="position: relative; margin: 10vh auto; max-width: 500px;">
+        <button onclick="closeModal('create-ticket-modal')"
+                style="position: absolute; right: var(--spacing-md); top: var(--spacing-md); background: none; border: none; font-size: var(--font-size-xl); cursor: pointer;">
+            ×
+        </button>
+        <h2 class="form-title">Create Ticket</h2>
+        <form id="ticket-form" class="form">
+            <div class="form-field">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-field">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required rows="4"></textarea>
+            </div>
+            <div class="form-field">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Create Ticket</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Ticket Modal -->
+<div id="edit-ticket-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+    <div class="form-card" style="position: relative; margin: 10vh auto; max-width: 500px;">
+        <button onclick="closeModal('edit-ticket-modal')"
+                style="position: absolute; right: var(--spacing-md); top: var(--spacing-md); background: none; border: none; font-size: var(--font-size-xl); cursor: pointer;">
+            ×
+        </button>
+        <h2 class="form-title">Edit Ticket</h2>
+        <form id="edit-ticket-form" class="form">
+            <input type="hidden" id="edit-ticket-id" name="id">
+            <div class="form-field">
+                <label for="edit-title">Title</label>
+                <input type="text" id="edit-title" name="title" required>
+            </div>
+            <div class="form-field">
+                <label for="edit-description">Description</label>
+                <textarea id="edit-description" name="description" required rows="4"></textarea>
+            </div>
+            <div class="form-field">
+                <label for="edit-status">Status</label>
+                <select id="edit-status" name="status" required>
+                    <option value="open">Open</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="edit-priority">Priority</label>
+                <select id="edit-priority" name="priority" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Update Ticket</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function openCreateTicketModal() {
+    document.getElementById('create-ticket-modal').style.display = 'block';
+}
+
+function openEditTicketModal(ticketJson) {
+    const ticket = JSON.parse(ticketJson);
+    document.getElementById('edit-ticket-id').value = ticket.id;
+    document.getElementById('edit-title').value = ticket.title;
+    document.getElementById('edit-description').value = ticket.description;
+    document.getElementById('edit-status').value = ticket.status;
+    document.getElementById('edit-priority').value = ticket.priority;
+    document.getElementById('edit-ticket-modal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function deleteTicket(ticketId) {
+    if (confirm('Are you sure you want to delete this ticket?')) {
+        fetch(`/api/tickets/${ticketId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+        }).then(() => {
+            window.location.reload();
+        }).catch(error => {
+            console.error('Error deleting ticket:', error);
+            alert('Failed to delete ticket');
+        });
+    }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}
+
+// Handle edit form submission
+document.getElementById('edit-ticket-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    const ticketId = data.id;
+    delete data.id;
+
+    try {
+        await updateTicket(ticketId, data);
+        window.location.reload();
+    } catch (error) {
+        showError(this, error.message);
+    }
+});
+</script>
+{% endblock %}

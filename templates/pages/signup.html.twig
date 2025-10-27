@@ -1,0 +1,84 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Sign Up - Ticket Management App{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2 class="form-title">Create Account</h2>
+        <form id="signup-form" class="form">
+            <div class="form-field">
+                <label for="name">Full Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    required 
+                    autocomplete="name"
+                    placeholder="Enter your full name"
+                >
+            </div>
+
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    autocomplete="email"
+                    placeholder="Enter your email"
+                >
+            </div>
+            
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    autocomplete="new-password"
+                    placeholder="Create a password"
+                    minlength="8"
+                >
+            </div>
+
+            <div class="form-field">
+                <label for="confirmPassword">Confirm Password</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    required 
+                    autocomplete="new-password"
+                    placeholder="Confirm your password"
+                    minlength="8"
+                >
+            </div>
+
+            <button type="submit" class="submit-button">Sign Up</button>
+
+            <p class="text-center mt-4">
+                Already have an account? 
+                <a href="/auth/login">Log in here</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('signup-form').addEventListener('submit', function(e) {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault();
+        showError(this, 'Passwords do not match');
+        return false;
+    }
+});
+</script>
+{% endblock %}

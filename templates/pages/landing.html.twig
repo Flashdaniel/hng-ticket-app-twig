@@ -1,0 +1,38 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block title %}Welcome - Ticket Management App{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Streamline Your Support Workflow</h1>
+        <p class="hero-subtitle">
+            Efficiently manage customer tickets, track issues, and deliver exceptional
+            support with our intuitive ticket management system.
+        </p>
+        <div class="hero-actions">
+            <a href="/auth/signup" class="cta-button primary">Get Started</a>
+            <a href="/auth/login" class="cta-button secondary">Login</a>
+        </div>
+    </div>
+    <div class="decorative-circle circle1"></div>
+    <div class="decorative-circle circle2"></div>
+</section>
+
+<section class="features">
+    <div class="features-grid">
+        <div class="feature-card">
+            <h3>Easy Ticket Management</h3>
+            <p>Create, track, and resolve tickets efficiently with our intuitive interface.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Real-time Updates</h3>
+            <p>Stay informed with instant notifications and status updates.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Detailed Analytics</h3>
+            <p>Track performance metrics and identify trends with comprehensive reports.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

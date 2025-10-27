@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ticket Management App{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">TicketApp</a>
+            <div class="nav-links">
+                {% if is_authenticated %}
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="/tickets">Tickets</a>
+                    <form action="/auth/logout" method="post" style="display: inline;">
+                        <button type="submit" class="cta-button secondary">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="/auth/login">Login</a>
+                    <a href="/auth/signup">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>© 2023 TicketApp. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/tickets.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
