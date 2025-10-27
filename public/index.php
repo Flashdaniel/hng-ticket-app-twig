@@ -16,7 +16,14 @@ $container = new Container();
 
 // Set view in container
 $container->set('view', function () {
-    return Twig::create(__DIR__ . '/../templates', ['cache' => false]);
+    $view = Twig::create(__DIR__ . '/../templates', ['cache' => false]);
+    
+    // Add base_path function
+    $view->getEnvironment()->addFunction(new \Twig\TwigFunction('base_path', function () {
+        return rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+    }));
+    
+    return $view;
 });
 
 // Create App

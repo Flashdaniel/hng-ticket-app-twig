@@ -1,19 +1,32 @@
-# Use official PHP image
-FROM php:8.2-cli
+# Use official PHP-FPM image
+FROM php:8.2-fpm
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    nginx \
+    unzip \
+    git \
+    && curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 
 # Set working directory
-WORKDIR /app
+WORKDIR /var/www/html
 
-# Copy everything into container
+# Copy application files
 COPY . .
 
-# Install dependencies (Twig)
-RUN apt-get update && apt-get install -y unzip git \
-  && curl -sS https://getcomposer.org/installer | php \
-  && php composer.phar install --no-dev --optimize-autoloader
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 10000
-EXPOSE 10000
+# Configure nginx
+COPY nginx.conf /etc/nginx/sites-available/default
 
-# Start PHP built-in server
-CMD ["php", "-S", "0.0.0.0:10000", "-t", "public"]
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+# Expose port 80
+EXPOSE 80
+
+# Start Nginx & PHP-FPM
+CMD service nginx start && php-fpm
